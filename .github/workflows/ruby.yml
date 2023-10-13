@@ -79,5 +79,5 @@ jobs:
           ISSUE_NUMBER="${{ steps.get_issue_number.outputs.issue_number }}"
           ISSUE_LINK="${{ steps.get_issue_number.outputs.issue_link }}"
           TEMPLATE_FILE=".github/pull_request_template.md"
-          sed -i "s/## Issue ticket number and link/## Issue ticket number and link\n\n- ${ISSUE_LINK}/" "$TEMPLATE_FILE"
+          sed -i "s### Issue ticket number and link### Issue ticket number and link\n\n- ${ISSUE_LINK}#" "$TEMPLATE_FILE"
         working-directory: ${{ github.workspace }}
