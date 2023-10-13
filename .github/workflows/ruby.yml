@@ -62,22 +62,3 @@ jobs:
         working-directory: '.github/tests'
         run: 
           ruby test/script_test.rb
-      - name: Get Issue Number
-        id: get_issue_number
-        run: |
-          ISSUE_NUMBER=$(curl -sH "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
-          jq -r '.issue_url' | awk -F'/' '{print $NF}' | sed 's/"//')
-          ISSUE_LINK="[Issue #${ISSUE_NUMBER}](https://github.com/${{ github.repository }}/issues/${ISSUE_NUMBER})"
-          echo "::set-output name=issue_number::${ISSUE_NUMBER}"
-          echo "::set-output name=issue_link::${ISSUE_LINK}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Update Pull Request Template
-        run: |
-          ISSUE_NUMBER="${{ steps.get_issue_number.outputs.issue_number }}"
-          ISSUE_LINK="${{ steps.get_issue_number.outputs.issue_link }}"
-          TEMPLATE_FILE=".github/pull_request_template.md"
-          sed -i "s### Issue ticket number and link### Issue ticket number and link\n\n- ${ISSUE_LINK}#" "$TEMPLATE_FILE"
-        working-directory: ${{ github.workspace }}
